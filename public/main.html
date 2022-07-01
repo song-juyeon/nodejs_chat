@@ -5,15 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>main.html</title>
+        <style>
+        .box{
+            float: left;
+            margin-top: 100px;
+            width: 400px;
+            height: 500px;
+            border-radius: 20px;
+        }
+        .cal{
+            border: black 2px solid;
+            border-radius: 10px;
+            width: 160px;
+            height: 50px;
+            color: black;
+            font-size: 18px;
 
+        }
+    </style>
 </head>
 <body>
-     <h1>계산기 프로그램</h1>
-    <button class="cal">계산기</button>
-        <!--    버튼을 누르면 cal클래스를 통해 openCalculator함수를 타고 해당 url로 이동
-                url를 통해 calculator 모듈의 calculatorPop을 호출-->
-
-
+    <div style="align-items: center;text-align: center">
+        <div class="box" style=" background-color: lightcoral; margin-left: 20%">
+            <br> <br> <br> <br> <h1>계산기 프로그램</h1> <br> <br> <br> <br>
+            <button class="cal">계산기</button>
+                <!--    버튼을 누르면 cal클래스를 통해 openCalculator함수를 타고 해당 url로 이동
+                        url를 통해 calculator 모듈의 calculatorPop을 호출-->
+        </div>
+        <div class="box" style="background-color: skyblue; margin-left: 50px">
+            <br> <br> <br> <br> <h1>2023년 카운트 다운</h1> <br> <br> <br>
+            <p id="demo" style="font-size: 30px"></p>
+        </div>
+    </div>
     <script>
          document.querySelector('.cal').addEventListener('click', function(){
             openCalculator('http://localhost:8008/calculator/calculatorPop');
@@ -36,6 +59,34 @@
         }
     </script>
 
+    <script>
 
+    var countDownDate = new Date("Jan 1, 2023 00:00:00").getTime();   // 카운트다운 날짜 설정
+
+    var x = setInterval(function() {    // 1초마다 카운트다운 / setInterval함수를 이용하여 1초마다 카운트다운하도록 무한루프를 실행함
+
+    var now = new Date().getTime();      // 오늘 날짜 및 시간 가져오기
+
+      // 현재와 카운트다운 날짜 사이의 시간 차? 남은 시간 계산
+      var distance = countDownDate - now;
+
+      // 일, 시간, 분, 초 계산
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      // id="demo"인 p태그 안에 출력
+      document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+      + minutes + "m " + seconds + "s ";
+
+      // 카운트다운이 끝날시
+      if (distance < 0) {
+        clearInterval(x);    //setInterval함수 종료
+        document.getElementById("demo").innerHTML = "Happy New Year!";
+      }
+    }, 1000);
+
+    </script>
 </body>
 </html>
