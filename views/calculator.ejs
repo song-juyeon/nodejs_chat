@@ -9,7 +9,7 @@
 
 </head>
 <body>
-    <div class="container bg-primary" style="height:100%; padding-top: 30px; padding-bottom: 30px">
+    <div class="container bg-primary" style="height:100%;  padding-top: 30px; padding-bottom: 30px">
 
                 <div class="form-group">
                     <input class="form-control" type="text" id="textBox" style="text-align:right; width:100%" placeholder="0" readonly/>
@@ -40,5 +40,71 @@
                 </div>
 
     </div>
+
+    <script>
+        var resetFlag = 'true' // =을 클릭하고 새로할 때는 새로운 값이 입력되게 하려고 'false'면 리셋을 시켜줘야함
+
+        $(document).ready(function(){
+
+            $('#calculation').on("click", function(){
+                var parameter = $('#textBox').val();
+
+                $.ajax({                        //ajax로 inputString이라는 key값으로 textBox값을 담아 파라미터로 전달. url은 같은 url로 던지지만, http 메서드가 다름
+                        type: 'POST',           //POST 방식으로 값을 던짐. 값을 가공
+                    url: '/calculator/calculatorPop',
+                    data: {inputString : parameter},
+                    success: function(result){
+                        if(result.calculationOutput == '0'){
+                            $('#textBox').val('');
+                        }else{
+                            $('#textBox').val(result.calculationOutput);
+                            resetFlag = 'false';
+                        }
+
+                    },
+                    error: function(err){
+                        console.log('ajax error')
+                    }
+                })
+            })
+
+            $('#clear').on("click", function(){
+                $('#textBox').val('');
+            })
+
+            $(document).keydown(function(event){        //$(document).keydown은 키패드 이벤트. 백스페이스는 KeyCode가 8. 그래서 백스페이스를 눌렀을 경우, 텍스트박스의 값이 뒷자리부터 하나씩 지워짐.
+
+                if(event.keyCode == '8'){
+                    var originText = $('#textBox').val();
+                    $('#textBox').val(originText.substring(0, originText.length-1));
+                }
+
+            })
+        })
+
+        function typing(inputValue){
+            var originalText = $('#textBox').val();
+
+            if(inputValue == '+' || inputValue == '-' || inputValue == '*' || inputValue == '/'){ // 연속된 기호를 못 붙이기 위함
+               // 연속된 기호를 못 붙이기 위함 ex)12+*3
+
+                var isNumber = parseInt(originalText.charAt(originalText.length-1));
+                if(isNaN(isNumber)){
+                    return;
+                }
+            }
+            if(resetFlag== 'false'){ // '='을 클릭하고 값을 리셋해주기 위해서
+                resetFlag = 'true';
+
+                if(!isNaN(parseInt(inputValue))){ // 숫자의 경우 리셋, 기호가 들어오면 계산 진행
+                    $('#textBox').val(inputValue);
+                    return;
+                }
+
+            }
+            $('#textBox').val(originalText+inputValue);
+        }
+
+    </script>
 </body>
 </html>
